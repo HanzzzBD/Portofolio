@@ -1,0 +1,26 @@
+﻿<svg width="640" height="420" viewBox="0 0 640 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="border" x1="0" y1="0" x2="640" y2="420" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#63F5D6" />
+      <stop offset="0.5" stop-color="#2BBCFF" />
+      <stop offset="1" stop-color="#8A4BFF" />
+    </linearGradient>
+    <linearGradient id="paper" x1="0" y1="0" x2="640" y2="420" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#101826" />
+      <stop offset="1" stop-color="#0B0F19" />
+    </linearGradient>
+  </defs>
+  <rect x="12" y="12" width="616" height="396" rx="28" fill="url(#paper)" stroke="url(#border)" stroke-width="2" />
+  <rect x="44" y="50" width="552" height="42" rx="14" fill="#0F172A" />
+  <rect x="44" y="110" width="450" height="16" rx="8" fill="#1E293B" />
+  <rect x="44" y="138" width="520" height="12" rx="6" fill="#1E293B" />
+  <rect x="44" y="164" width="480" height="12" rx="6" fill="#1E293B" />
+  <rect x="44" y="218" width="340" height="10" rx="5" fill="#1E293B" />
+  <rect x="44" y="240" width="400" height="10" rx="5" fill="#1E293B" />
+  <rect x="44" y="262" width="280" height="10" rx="5" fill="#1E293B" />
+  <circle cx="520" cy="282" r="58" fill="#0F172A" stroke="#2BBCFF" stroke-width="2" />
+  <circle cx="520" cy="282" r="38" fill="#0B0F19" />
+  <path d="M520 260L532 280L520 300L508 280L520 260Z" fill="#63F5D6" />
+  <rect x="44" y="320" width="220" height="14" rx="7" fill="#1E293B" />
+  <rect x="44" y="346" width="260" height="10" rx="5" fill="#1E293B" />
+</svg>

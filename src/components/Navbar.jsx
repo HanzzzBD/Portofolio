@@ -1,6 +1,6 @@
 ﻿import { useEffect, useState } from "react"
 import { FiMenu, FiX } from "react-icons/fi"
-import ModeSwitch from "./mode"
+import ModeSwitch from "./ModeSwitch"
 
 const navLinks = [
   { label: "About", href: "#about" },

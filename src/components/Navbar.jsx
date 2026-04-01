@@ -107,7 +107,6 @@ const Navbar = () => {
                   checked={theme === "dark"}
                   onChange={handleThemeChange}
                 />
-                <span className="text-xs text-slate-400">Mode</span>
               </div>
               <a href="#contact" className="btn-outline text-sm">
                 Let's Talk

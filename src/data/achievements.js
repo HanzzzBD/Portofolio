@@ -1,4 +1,4 @@
-﻿export const achievements = [
+export const achievements = [
   {
     title: "Dinamik 20",
     date: "14 December 2025",
@@ -8,8 +8,8 @@
     description:
       "Reached finalist stage in a national competitive programming competition by solving algorithmic problems.",
     images: [
-      "/src/assets/img/dinamik/Screenshot 2025-12-12 211821.png",
-      "/src/assets/img/dinamik/Hadrian rangga ardiantara (2).jpg",
+      "/assets/img/dinamik/Screenshot 2025-12-12 211821.png",
+      "/assets/img/dinamik/Hadrian rangga ardiantara (2).jpg",
     ],
   },
   {
@@ -20,7 +20,7 @@
     result: "3rd Place",
     description:
       "Won 3rd place in a provincial web development competition by building a functional web solution.",
-    images: ["/src/assets/img/innoventure/Screenshot 2026-03-13 203137.png"],
+    images: ["/assets/img/innoventure/Screenshot 2026-03-13 203137.png"],
   },
   {
     title: "National Programming Logic Competitions(ORBIT A)",
@@ -30,6 +30,7 @@
     result: "Finalist",
     description:
       "Finalist in a national competition with a digital business plan concept.",
-    images: ["/src/assets/img/nplc/Screenshot 2026-03-13 205640.png"],
+    images: ["/assets/img/nplc/Screenshot 2026-03-13 205640.png"],
   },
 ]
+

@@ -1,21 +1,21 @@
-# 🚀 Developer Portfolio – Hadrian Rangga
+﻿# ðŸš€ Developer Portfolio â€“ Hadrian Rangga
 
 A modern **developer portfolio website** built using **React + Vite + Tailwind CSS**, featuring a futuristic UI design, smooth animations, and a professional showcase of projects and achievements.
 
 ---
 
-## 👨‍💻 About Me
+## ðŸ‘¨â€ðŸ’» About Me
 
 Hi, I'm **Hadrian Rangga**, a Software Engineering (RPL) student passionate about:
 
-* 🌐 Fullstack Web Development (MERN & Laravel)
-* 🧠 Problem Solving & Competitive Programming
-* 🎮 Game Logic & System Design
-* 🤖 Future goal: Machine Learning Engineer & Tech CEO
+* ðŸŒ Fullstack Web Development (MERN & Laravel)
+* ðŸ§  Problem Solving & Competitive Programming
+* ðŸŽ® Game Logic & System Design
+* ðŸ¤– Future goal: Machine Learning Engineer & Tech CEO
 
 ---
 
-## ⚙️ Tech Stack
+## âš™ï¸ Tech Stack
 
 ### Frontend
 
@@ -31,43 +31,43 @@ Hi, I'm **Hadrian Rangga**, a Software Engineering (RPL) student passionate abou
 
 ---
 
-## ✨ Features
+## âœ¨ Features
 
-* 🌙 Dark futuristic UI design
-* 🎬 Smooth animations with GSAP
-* 📱 Fully responsive layout
-* 🧩 Modular component structure
-* 📂 Static data (ready to connect to backend API)
-* 🏆 Premium Achievements Timeline with image proof
-* 🔍 Filterable achievements section
-* 🖼️ Image preview modal
+* ðŸŒ™ Dark futuristic UI design
+* ðŸŽ¬ Smooth animations with GSAP
+* ðŸ“± Fully responsive layout
+* ðŸ§© Modular component structure
+* ðŸ“‚ Static data (ready to connect to backend API)
+* ðŸ† Premium Achievements Timeline with image proof
+* ðŸ” Filterable achievements section
+* ðŸ–¼ï¸ Image preview modal
 
 ---
 
-## 📁 Project Structure
+## ðŸ“ Project Structure
 
 ```
 src
- ├ components
- │  ├ Navbar.jsx
- │  ├ Hero.jsx
- │  ├ About.jsx
- │  ├ Skills.jsx
- │  ├ Projects.jsx
- │  ├ Achievements.jsx
- │  └ Contact.jsx
- ├ data
- │  ├ projects.js
- │  ├ achievements.js
- │  └ skills.js
- ├ pages
- │  └ Home.jsx
- └ App.jsx
+ â”œ components
+ â”‚  â”œ Navbar.jsx
+ â”‚  â”œ Hero.jsx
+ â”‚  â”œ About.jsx
+ â”‚  â”œ Skills.jsx
+ â”‚  â”œ Projects.jsx
+ â”‚  â”œ Achievements.jsx
+ â”‚  â”” Contact.jsx
+ â”œ data
+ â”‚  â”œ projects.js
+ â”‚  â”œ achievements.js
+ â”‚  â”” skills.js
+ â”œ pages
+ â”‚  â”” Home.jsx
+ â”” App.jsx
 ```
 
 ---
 
-## 📌 Projects
+## ðŸ“Œ Projects
 
 * **Stock Management System**
   Inventory management web app with CRUD functionality.
@@ -83,17 +83,17 @@ src
 
 ---
 
-## 🏆 Achievements
+## ðŸ† Achievements
 
-* 🥉 **Innoventure Web Development Competition** (Provincial – 3rd Place)
-* ⭐ **Dinamik 20 Competitive Programming** (National – Finalist)
-* ⭐ **National Programming Logic Competition** (National – Finalist)
+* ðŸ¥‰ **Innoventure Web Development Competition** (Provincial â€“ 3rd Place)
+* â­ **Dinamik 20 Competitive Programming** (National â€“ Finalist)
+* â­ **National Programming Logic Competition** (National â€“ Finalist)
 
 Each achievement includes **image proof (certificate / documentation)**.
 
 ---
 
-## 🚀 Getting Started
+## ðŸš€ Getting Started
 
 ### 1. Clone Repository
 
@@ -116,7 +116,7 @@ npm run dev
 
 ---
 
-## 📦 Build for Production
+## ðŸ“¦ Build for Production
 
 ```bash
 npm run build
@@ -124,14 +124,22 @@ npm run build
 
 ---
 
-## 🌐 Deployment
+## Deployment (Vercel)
 
-* Frontend: **Vercel**
-* Assets: `/public/images`
+1. Push repository ke GitHub.
+2. Di Vercel pilih New Project lalu import repo.
+3. Framework preset: Vite.
+4. Build Command: 
+pm run build`r
+5. Output Directory: dist`r
+6. (Opsional) Tambahkan env VITE_API_URL jika pakai API eksternal.
+7. Deploy.
+
+Assets achievements disajikan dari public/assets/img/.
 
 ---
 
-## 📬 Contact
+
 
 * GitHub: https://github.com/your-username
 * Email: [your-email@example.com](mailto:your-email@example.com)
@@ -139,16 +147,16 @@ npm run build
 
 ---
 
-## 💡 Future Improvements
+## ðŸ’¡ Future Improvements
 
-* 🔗 Connect to backend (MERN API)
-* 🔐 Admin dashboard for managing projects & achievements
-* 🌍 Multi-language support
-* ⚡ Performance optimization
+* ðŸ”— Connect to backend (MERN API)
+* ðŸ” Admin dashboard for managing projects & achievements
+* ðŸŒ Multi-language support
+* âš¡ Performance optimization
 
 ---
 
-## ⭐ Notes
+## â­ Notes
 
 This project is designed to be:
 
@@ -158,4 +166,8 @@ This project is designed to be:
 
 ---
 
-> “Build something today that your future self will thank you for.”
+> â€œBuild something today that your future self will thank you for.â€
+
+
+
+

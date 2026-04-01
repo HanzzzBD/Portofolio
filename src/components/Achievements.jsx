@@ -1,4 +1,4 @@
-﻿import { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { cinematicEase } from "../utils/gsapEase"
@@ -21,9 +21,18 @@ const badgeStyles = {
   "1st Place": "badge-gold",
 }
 
+const normalizeAchievementImage = (image) => {
+  if (!image) return null
+  if (image.startsWith("/src/assets/img")) {
+    return image.replace("/src/assets/img", "/assets/img")
+  }
+  return image
+}
+
 const resolveImage = (image) => {
-  if (!image || image === "/src/assets/img") return proofImage
-  return encodeURI(image)
+  const normalized = normalizeAchievementImage(image)
+  if (!normalized || normalized === "/assets/img") return proofImage
+  return encodeURI(normalized)
 }
 
 const resolveImages = (achievement) => {
@@ -274,3 +283,4 @@ const Achievements = () => {
 }
 
 export default Achievements
+

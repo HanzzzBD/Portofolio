@@ -1,5 +1,6 @@
-﻿import { useState } from "react"
+﻿import { useEffect, useState } from "react"
 import { FiMenu, FiX } from "react-icons/fi"
+import ModeSwitch from "./mode"
 
 const navLinks = [
   { label: "About", href: "#about" },
@@ -9,8 +10,30 @@ const navLinks = [
   { label: "Contact", href: "#contact" },
 ]
 
+const getInitialTheme = () => {
+  if (typeof window === "undefined") return "dark"
+
+  const storedTheme = window.localStorage.getItem("theme")
+  if (storedTheme === "light" || storedTheme === "dark") return storedTheme
+
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches
+  return prefersDark ? "dark" : "light"
+}
+
 const Navbar = () => {
   const [open, setOpen] = useState(false)
+  const [theme, setTheme] = useState(getInitialTheme)
+
+  useEffect(() => {
+    const root = document.documentElement
+    root.dataset.theme = theme
+    root.style.colorScheme = theme
+    window.localStorage.setItem("theme", theme)
+  }, [theme])
+
+  const handleThemeChange = (event) => {
+    setTheme(event.target.checked ? "dark" : "light")
+  }
 
   return (
     <header className="fixed top-0 left-0 z-50 w-full">
@@ -38,7 +61,12 @@ const Navbar = () => {
             ))}
           </nav>
 
-          <div className="hidden md:flex">
+          <div className="hidden md:flex items-center gap-3">
+            <ModeSwitch
+              className="scale-75 origin-right"
+              checked={theme === "dark"}
+              onChange={handleThemeChange}
+            />
             <a href="#contact" className="btn-outline text-sm">
               Let's Talk
             </a>
@@ -73,6 +101,14 @@ const Navbar = () => {
                   {link.label}
                 </a>
               ))}
+              <div className="flex items-center gap-3">
+                <ModeSwitch
+                  className="scale-75 origin-left"
+                  checked={theme === "dark"}
+                  onChange={handleThemeChange}
+                />
+                <span className="text-xs text-slate-400">Mode</span>
+              </div>
               <a href="#contact" className="btn-outline text-sm">
                 Let's Talk
               </a>

@@ -16,12 +16,12 @@
     demo: "https://presensi.orbit4.cloud/",
   },
   {
-    title: "Pulse CRM",
+    title: "Eclipse",
     description:
-      "MERN CRM platform for sales pipelines, deal tracking, and team collaboration in real time.",
-    tech: ["React", "Node.js", "PostgreSQL", "Socket.io"],
-    github: "https://github.com/yourname/pulse-crm",
-    demo: "https://pulse-crm.vercel.app",
+      "ECLIPSE is an extracurricular website for digital bulletin boards and archives of member achievements.",
+    tech: ["React", "Node.js", "MongoDBL", "Express"],
+    github: "https://github.com/HanzzzBD/Eclipse_MERN",
+    demo: "",
   },
   {
     title: "Atlas Taskflow",

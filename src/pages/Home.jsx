@@ -1,4 +1,4 @@
-﻿import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { cinematicEase } from "../utils/gsapEase"
@@ -123,9 +123,6 @@ const Home = () => {
     let cancelled = false
     let lineIndex = 0
     let charIndex = 0
-
-    setTypedLines(LOCK_LINES.map(() => ""))
-    setTypingComplete(false)
 
     const typeNext = () => {
       if (cancelled) return
@@ -299,4 +296,5 @@ const Home = () => {
 }
 
 export default Home
+
 

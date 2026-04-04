@@ -1,4 +1,4 @@
-import { useState } from "react"
+﻿import { useState } from "react"
 import { FiGithub, FiLinkedin, FiMail } from "react-icons/fi"
 import { contactEmail, sendContactMessage } from "../services/contactService"
 
@@ -183,7 +183,7 @@ const Contact = () => {
               }`}
               aria-live="polite"
             >
-              {feedback || `Messages from this form are delivered to ${contactEmail}.`}
+              {feedback}
             </p>
           </form>
         </div>

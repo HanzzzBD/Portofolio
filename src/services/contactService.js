@@ -1,4 +1,4 @@
-const CONTACT_EMAIL = "hadrianrangg8@gmail.com"
+const CONTACT_EMAIL = "hadrianrangga8@gmail.com"
 
 // This can be overridden with an obfuscated FormSubmit endpoint in production if needed.
 const CONTACT_FORM_ENDPOINT =

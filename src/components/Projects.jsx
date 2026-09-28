@@ -49,6 +49,7 @@ const Projects = () => {
               const hasGithub = isRealLink(project.github)
               const hasDemo = isRealLink(project.demo)
               const role = project.role || "Developer"
+              const delivery = project.delivery
               const isLastSingle =
                 visibleItems.length % 2 === 1 && index === visibleItems.length - 1
               const isWide = index % 4 === 0 || index % 4 === 3
@@ -66,6 +67,9 @@ const Projects = () => {
                       <div>
                         <p className="card-title text-2xl">{project.title}</p>
                         <p className="mt-2 text-sm text-slate-400">Role: {role}</p>
+                        {delivery && (
+                          <p className="mt-1 text-xs text-slate-500">Delivery: {delivery}</p>
+                        )}
                       </div>
                       <span className="badge">{project.tech?.[0] || "Project"}</span>
                     </div>

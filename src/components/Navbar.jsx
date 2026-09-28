@@ -16,8 +16,7 @@ const getInitialTheme = () => {
   const storedTheme = window.localStorage.getItem("theme")
   if (storedTheme === "light" || storedTheme === "dark") return storedTheme
 
-  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches
-  return prefersDark ? "dark" : "light"
+  return "dark"
 }
 
 const Navbar = () => {
@@ -37,15 +36,15 @@ const Navbar = () => {
 
   return (
     <header className="fixed top-0 left-0 z-50 w-full">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+      <div className="mx-auto flex w-full max-w-[1680px] items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         <div className="glass flex w-full items-center justify-between rounded-full px-5 py-3">
           <a href="#home" className="flex items-center gap-3">
             <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent-400 text-base-900 font-semibold">
               HR
             </span>
-            <div className="text-sm leading-tight">
+            <div className="hidden text-sm leading-tight sm:block">
               <p className="text-white font-semibold">Hadrian Rangga Ardiantara</p>
-              <p className="text-xs text-slate-400">Web & Game dev</p>
+              <p className="text-xs text-slate-400">Web, backend, AI/ML learning</p>
             </div>
           </a>
 
@@ -68,7 +67,7 @@ const Navbar = () => {
               onChange={handleThemeChange}
             />
             <a href="#contact" className="btn-outline text-sm">
-              Let's Talk
+              Contact
             </a>
           </div>
 
@@ -88,7 +87,7 @@ const Navbar = () => {
           open ? "opacity-100 translate-y-0" : "pointer-events-none opacity-0 -translate-y-4"
         }`}
       >
-        <div className="mx-auto max-w-6xl px-6">
+        <div className="mx-auto w-full max-w-[1680px] px-4 sm:px-6 lg:px-8">
           <div className="glass rounded-2xl p-5">
             <div className="flex flex-col gap-4">
               {navLinks.map((link) => (
@@ -109,7 +108,7 @@ const Navbar = () => {
                 />
               </div>
               <a href="#contact" className="btn-outline text-sm">
-                Let's Talk
+                Contact
               </a>
             </div>
           </div>
@@ -120,4 +119,3 @@ const Navbar = () => {
 }
 
 export default Navbar
-

@@ -1,15 +1,16 @@
-﻿import { useEffect, useRef } from "react"
+import { useEffect, useRef } from "react"
 import { gsap } from "gsap"
 import { cinematicEase } from "../utils/gsapEase"
+import { getExperienceFlags } from "../utils/experienceMode"
+import ThreeHeroScene from "./ThreeHeroScene"
 
 const Hero = () => {
   const heroRef = useRef(null)
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
-      if (reduceMotion) {
-        gsap.set([".hero-line", ".hero-cta", ".hero-card"], {
+      if (!getExperienceFlags().canUseRichAnimations) {
+        gsap.set([".hero-line", ".hero-cta", ".hero-panel", ".hero-scene-wrap"], {
           opacity: 1,
           y: 0,
           scale: 1,
@@ -19,12 +20,14 @@ const Hero = () => {
 
       gsap.set(".hero-line", { y: 24, opacity: 0 })
       gsap.set(".hero-cta", { y: 16, opacity: 0 })
-      gsap.set(".hero-card", { y: 24, opacity: 0, scale: 0.96 })
+      gsap.set(".hero-panel", { y: 24, opacity: 0, scale: 0.96 })
+      gsap.set(".hero-scene-wrap", { y: 30, opacity: 0, scale: 0.92 })
 
       const tl = gsap.timeline({ defaults: { ease: cinematicEase, duration: 1.05 } })
       tl.to(".hero-line", { y: 0, opacity: 1, stagger: 0.15 })
         .to(".hero-cta", { y: 0, opacity: 1 }, "-=0.5")
-        .to(".hero-card", { y: 0, opacity: 1, scale: 1 }, "-=0.6")
+        .to(".hero-scene-wrap", { y: 0, opacity: 1, scale: 1 }, "-=0.75")
+        .to(".hero-panel", { y: 0, opacity: 1, scale: 1 }, "-=0.6")
 
       gsap.to(".hero-float", {
         y: -10,
@@ -34,32 +37,27 @@ const Hero = () => {
         repeat: -1,
         delay: 1.2,
       })
-
-      gsap.to(".hero-orb", {
-        x: 10,
-        y: -8,
-        duration: 6,
-        ease: "sine.inOut",
-        yoyo: true,
-        repeat: -1,
-        stagger: 0.6,
-      })
     }, heroRef)
 
     return () => ctx.revert()
   }, [])
 
   return (
-    <section id="home" ref={heroRef} className="section min-h-screen pt-28">
-      <div className="mx-auto grid max-w-6xl items-center gap-12 px-6 lg:grid-cols-[1.2fr_0.8fr]">
-        <div className="hero-parallax-content space-y-6">
-          <span className="badge hero-line">Building web apps & interactive games</span>
-          <div className="space-y-4">
-            <h1 className="hero-line text-4xl md:text-6xl">
-              Hi, I'm <span className="text-gradient">Hadrian Rangga Ardiantara</span>
+    <section id="home" ref={heroRef} className="hero-section section min-h-[92svh] pt-28 md:min-h-screen">
+      <div className="hero-ambient" aria-hidden="true" />
+      <div className="mx-auto grid w-full max-w-[1680px] items-center gap-10 px-4 sm:px-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)] lg:px-8">
+        <div className="hero-parallax-content relative z-10 max-w-5xl space-y-7">
+          <p className="hero-line text-sm font-medium text-accent-300">
+            RPL/PPLG student at SMKN 4 Bandung
+          </p>
+          <div className="space-y-5">
+            <h1 className="hero-line text-balance text-5xl font-semibold leading-[0.95] tracking-normal sm:text-6xl lg:text-7xl xl:text-8xl">
+              Hadrian Rangga builds web systems.
             </h1>
-            <p className="hero-line text-lg md:text-xl text-slate-300">
-              I build modern web applications using the MERN stack and create interactive experiences through game development. I enjoy turning ideas into real projects while continuously improving my engineering skills.
+            <p className="hero-line max-w-2xl text-lg text-slate-300 md:text-xl">
+              I am focused on web development, backend systems, and machine learning fundamentals.
+              I like turning school, competition, and product ideas into working applications with
+              clear interfaces and maintainable code.
             </p>
           </div>
           <div className="hero-cta flex flex-wrap items-center gap-4">
@@ -70,63 +68,46 @@ const Hero = () => {
               Contact
             </a>
           </div>
-          <div className="hero-cta flex flex-wrap gap-6 text-sm text-slate-400">
-            <div>
-              <p className="text-slate-100 font-semibold">4+ Years</p>
-              <p>Product engineering</p>
+          <div className="hero-cta grid max-w-3xl gap-3 text-sm text-slate-400 sm:grid-cols-3">
+            <div className="hero-stat">
+              <p className="text-slate-100 font-semibold">Frontend</p>
+              <p>React, Vite, Tailwind</p>
             </div>
-            <div>
-              <p className="text-slate-100 font-semibold">1 Projects</p>
-              <p>end-to-end app</p>
+            <div className="hero-stat">
+              <p className="text-slate-100 font-semibold">Backend</p>
+              <p>Laravel, Node, databases</p>
             </div>
-            <div>
-              <p className="text-slate-100 font-semibold">8 Tools</p>
-              <p>Personal utilities</p>
-            </div>
-            <div>
-              <p className="text-slate-100 font-semibold">Based In</p>
-              <p>Bandung, ID</p>
+            <div className="hero-stat">
+              <p className="text-slate-100 font-semibold">Learning</p>
+              <p>AI/ML foundations</p>
             </div>
           </div>
         </div>
 
-        <div className="hero-parallax-card">
-          <div className="hero-card hero-float relative">
-            <div className="hero-orb absolute -top-8 -left-8 h-32 w-32 rounded-full bg-accent-400/30 blur-3xl" />
-            <div className="hero-orb absolute -bottom-10 -right-6 h-32 w-32 rounded-full bg-neon-500/20 blur-3xl" />
-            <div className="glass relative overflow-hidden rounded-3xl p-8">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Status</p>
-                  <p className="text-lg font-semibold text-slate-50">Student Developer</p>
-                </div>
-                <span className="badge">2026</span>
+        <div className="hero-parallax-card relative z-10">
+          <div className="hero-scene-wrap hero-float">
+            <ThreeHeroScene />
+          </div>
+          <div className="hero-panel glass">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-xs uppercase tracking-[0.28em] text-slate-400">Current focus</p>
+                <p className="mt-2 text-xl font-semibold text-slate-50">Backend-ready web apps</p>
               </div>
-              <div className="mt-8 space-y-4">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-slate-400">Current focus</span>
-                  <span className="text-slate-100">Web Apps & Game Development</span>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-slate-400">Tooling</span>
-                  <span className="text-slate-100">React / Vite / Unity / Laravel</span>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-slate-400">Workstyle</span>
-                  <span className="text-slate-100">Curious / Builder mindset</span>
-                </div>
+              <span className="badge">Bandung</span>
+            </div>
+            <div className="mt-6 grid gap-3 text-sm">
+              <div className="hero-panel-row">
+                <span>School</span>
+                <strong>SMKN 4 Bandung</strong>
               </div>
-              <div className="mt-8 h-32 rounded-2xl bg-base-800/60 p-4">
-                <div className="flex items-center justify-between text-xs text-slate-400">
-                  <span>Energy</span>
-                  <span>100%</span>
-                </div>
-                <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-white/5">
-                  <div className="h-full w-[100%] rounded-full bg-gradient-to-r from-accent-400 via-neon-500 to-accent-300" />
-                </div>
-                <p className="mt-4 text-xs text-slate-400">
-                  Building web apps, tools, and interactive games.
-                </p>
+              <div className="hero-panel-row">
+                <span>Program</span>
+                <strong>RPL / PPLG</strong>
+              </div>
+              <div className="hero-panel-row">
+                <span>Direction</span>
+                <strong>Web, backend, AI/ML learning</strong>
               </div>
             </div>
           </div>
@@ -137,4 +118,3 @@ const Hero = () => {
 }
 
 export default Hero
-

@@ -15,7 +15,16 @@
   SiBlender,
   SiOpenjdk,
   SiKotlin,
+  SiTypescript,
+  SiPostgresql,
+  SiPrisma,
+  SiRedis,
+  SiDocker,
+  SiGreensock,
+  SiGoogle,
+  SiW3C,
 } from "react-icons/si"
+import { FiLayers } from "react-icons/fi"
 
 export const skills = [
   {
@@ -43,6 +52,24 @@ export const skills = [
     focus: "Core web logic",
   },
   {
+    name: "TypeScript",
+    icon: SiTypescript,
+    category: "frontend",
+    focus: "Type-safe applications",
+  },
+  {
+    name: "GSAP",
+    icon: SiGreensock,
+    category: "frontend",
+    focus: "Web motion & interaction",
+  },
+  {
+    name: "Web Accessibility",
+    icon: SiW3C,
+    category: "frontend",
+    focus: "WCAG-first interfaces",
+  },
+  {
     name: "Laravel",
     icon: SiLaravel,
     category: "backend",
@@ -66,11 +93,29 @@ export const skills = [
     category: "backend",
     focus: "Relational database",
   },
-    {
+  {
     name: "MongoDB",
     icon: SiMongodb,
     category: "backend",
     focus: "Schema-less data storage",
+  },
+  {
+    name: "PostgreSQL",
+    icon: SiPostgresql,
+    category: "backend",
+    focus: "Relational data modeling",
+  },
+  {
+    name: "Prisma",
+    icon: SiPrisma,
+    category: "backend",
+    focus: "Database ORM & migrations",
+  },
+  {
+    name: "Redis",
+    icon: SiRedis,
+    category: "backend",
+    focus: "Caching, queues & rate limits",
   },
   {
     name: "Java",
@@ -95,6 +140,24 @@ export const skills = [
     icon: SiGit,
     category: "tools",
     focus: "Version control",
+  },
+  {
+    name: "Docker",
+    icon: SiDocker,
+    category: "tools",
+    focus: "Containerized development",
+  },
+  {
+    name: "System Design",
+    icon: FiLayers,
+    category: "tools",
+    focus: "Architecture & technical planning",
+  },
+  {
+    name: "Gemini API",
+    icon: SiGoogle,
+    category: "aiml",
+    focus: "AI assistant integration",
   },
   {
     name: "Unity",

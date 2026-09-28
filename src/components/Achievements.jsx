@@ -2,7 +2,12 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { cinematicEase } from "../utils/gsapEase"
-import { getAchievements } from "../services/portfolioService"
+import { getExperienceFlags } from "../utils/experienceMode"
+import {
+  getAchievements,
+  getAchievementsSnapshot,
+  hasPortfolioApi,
+} from "../services/portfolioService"
 import proofImage from "../assets/achievement-proof.svg"
 
 gsap.registerPlugin(ScrollTrigger)
@@ -45,12 +50,23 @@ const resolveImages = (achievement) => {
 
 const Achievements = () => {
   const rootRef = useRef(null)
-  const [items, setItems] = useState([])
+  const [items, setItems] = useState(() => getAchievementsSnapshot())
   const [activeFilter, setActiveFilter] = useState("All")
   const [activeImage, setActiveImage] = useState(null)
 
   useEffect(() => {
-    getAchievements().then(setItems)
+    if (!hasPortfolioApi()) return undefined
+
+    let active = true
+    getAchievements().then((data) => {
+      if (active) {
+        setItems(data)
+      }
+    })
+
+    return () => {
+      active = false
+    }
   }, [])
 
   const filteredItems = useMemo(() => {
@@ -62,24 +78,21 @@ const Achievements = () => {
   }, [items, activeFilter])
 
   useEffect(() => {
-    if (!activeImage) return
+    if (!activeImage) return undefined
+
     const handleKeyDown = (event) => {
       if (event.key === "Escape") setActiveImage(null)
     }
+
     document.addEventListener("keydown", handleKeyDown)
     return () => document.removeEventListener("keydown", handleKeyDown)
   }, [activeImage])
 
   useEffect(() => {
     const root = rootRef.current
-    if (!root) return
-
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    const listeners = []
+    if (!root || !getExperienceFlags().canUseRichAnimations) return undefined
 
     const ctx = gsap.context(() => {
-      if (reduceMotion) return
-
       const line = root.querySelector(".timeline-line")
       if (line) {
         gsap.fromTo(
@@ -99,7 +112,7 @@ const Achievements = () => {
         )
       }
 
-      gsap.utils.toArray(".timeline-item").forEach((item) => {
+      gsap.utils.toArray(root.querySelectorAll(".timeline-item")).forEach((item) => {
         const side = item.dataset.side === "left" ? -70 : 70
         gsap.fromTo(
           item,
@@ -116,50 +129,14 @@ const Achievements = () => {
           },
         )
       })
-
-      gsap.utils.toArray(".badge-pulse").forEach((badge) => {
-        gsap.to(badge, {
-          scale: 1.06,
-          boxShadow: "0 0 26px rgba(99, 245, 214, 0.55)",
-          duration: 1.8,
-          ease: "sine.inOut",
-          yoyo: true,
-          repeat: -1,
-        })
-      })
-
-      gsap.utils.toArray(".achievement-image").forEach((img) => {
-        const onEnter = () =>
-          gsap.to(img, {
-            scale: 1.06,
-            duration: 0.5,
-            ease: cinematicEase,
-          })
-        const onLeave = () =>
-          gsap.to(img, {
-            scale: 1,
-            duration: 0.6,
-            ease: cinematicEase,
-          })
-
-        img.addEventListener("mouseenter", onEnter)
-        img.addEventListener("mouseleave", onLeave)
-        listeners.push({ img, onEnter, onLeave })
-      })
     }, root)
 
-    return () => {
-      listeners.forEach(({ img, onEnter, onLeave }) => {
-        img.removeEventListener("mouseenter", onEnter)
-        img.removeEventListener("mouseleave", onLeave)
-      })
-      ctx.revert()
-    }
+    return () => ctx.revert()
   }, [filteredItems])
 
   return (
-    <section id="achievements" className="section">
-      <div className="mx-auto max-w-6xl px-6">
+    <section id="achievements" className="section reveal">
+      <div className="mx-auto w-full max-w-[1520px] px-4 sm:px-6 lg:px-8">
         <div ref={rootRef} className="achievement-shell">
           <div className="achievement-bg" aria-hidden="true">
             <div className="particle-field" />
@@ -167,17 +144,17 @@ const Achievements = () => {
           </div>
 
           <div className="relative z-10 space-y-8">
-            <div className="space-y-3">
+            <div className="space-y-3 reveal-item">
               <p className="section-kicker">Achievements</p>
               <div className="flex flex-wrap items-end justify-between gap-6">
-                <h2 className="section-title">High-impact accomplishments</h2>
+                <h2 className="section-title">Competition milestones and proof.</h2>
                 <p className="max-w-lg text-sm text-slate-400">
-                  A premium timeline of competitive wins, accolades, and measurable milestones.
+                  Existing achievements are shown as a filterable timeline with image previews.
                 </p>
               </div>
             </div>
 
-            <div className="filter-tabs">
+            <div className="filter-tabs reveal-item">
               {filters.map((filter) => (
                 <button
                   key={filter.key}
@@ -190,8 +167,13 @@ const Achievements = () => {
               ))}
             </div>
 
-            <div className="timeline">
+            <div className="timeline reveal-item">
               <div className="timeline-line" aria-hidden="true" />
+              {filteredItems.length === 0 && (
+                <div className="timeline-card ml-10 text-sm text-slate-400">
+                  No achievements match this filter yet.
+                </div>
+              )}
               {filteredItems.map((achievement, index) => {
                 const side = index % 2 === 0 ? "left" : "right"
                 const badgeClass = badgeStyles[achievement.result] || "badge-finalist"
@@ -211,9 +193,7 @@ const Achievements = () => {
                               {achievement.title}
                             </h3>
                           </div>
-                          <span className={`result-badge badge-pulse ${badgeClass}`}>
-                            {achievement.result}
-                          </span>
+                          <span className={`result-badge ${badgeClass}`}>{achievement.result}</span>
                         </div>
 
                         <div className="mt-3 timeline-meta">
@@ -222,9 +202,7 @@ const Achievements = () => {
                           <span className="timeline-tag">{achievement.date}</span>
                         </div>
 
-                        <p className="mt-4 text-sm text-slate-300">
-                          {achievement.description}
-                        </p>
+                        <p className="mt-4 text-sm text-slate-300">{achievement.description}</p>
 
                         <div className="achievement-image-grid">
                           {imageList.map((src, photoIndex) => (
@@ -232,14 +210,15 @@ const Achievements = () => {
                               type="button"
                               key={`${achievement.title}-${photoIndex}`}
                               className="achievement-image-wrap group"
-                              onClick={() =>
-                                setActiveImage({ src, title: achievement.title })
-                              }
+                              onClick={() => setActiveImage({ src, title: achievement.title })}
                             >
                               <img
                                 src={src}
                                 alt={`${achievement.title} proof ${photoIndex + 1}`}
-                                className="achievement-image"
+                                loading="lazy"
+                                decoding="async"
+                                sizes="(max-width: 768px) 100vw, 33vw"
+                                className="achievement-image transition-transform duration-500 ease-out group-hover:scale-[1.03]"
                               />
                             </button>
                           ))}
@@ -264,7 +243,7 @@ const Achievements = () => {
           onClick={() => setActiveImage(null)}
         >
           <div className="modal-content" onClick={(event) => event.stopPropagation()}>
-            <div className="flex items-center justify-between gap-4 mb-4">
+            <div className="mb-4 flex items-center justify-between gap-4">
               <p className="text-sm text-slate-400">{activeImage.title}</p>
               <button
                 type="button"
@@ -283,4 +262,3 @@ const Achievements = () => {
 }
 
 export default Achievements
-

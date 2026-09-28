@@ -1,9 +1,17 @@
-﻿import { achievements } from "../data/achievements"
+import { achievements } from "../data/achievements"
 import { projects } from "../data/projects"
 import { skills } from "../data/skills"
 import { api } from "./api"
 
 const shouldUseApi = () => Boolean(import.meta.env.VITE_API_URL)
+
+export const hasPortfolioApi = () => shouldUseApi()
+
+export const getProjectsSnapshot = () => (shouldUseApi() ? [] : projects)
+
+export const getSkillsSnapshot = () => (shouldUseApi() ? [] : skills)
+
+export const getAchievementsSnapshot = () => (shouldUseApi() ? [] : achievements)
 
 export const getProjects = async () => {
   if (shouldUseApi()) {
@@ -11,7 +19,7 @@ export const getProjects = async () => {
     return data
   }
 
-  return projects
+  return getProjectsSnapshot()
 }
 
 export const getSkills = async () => {
@@ -20,7 +28,7 @@ export const getSkills = async () => {
     return data
   }
 
-  return skills
+  return getSkillsSnapshot()
 }
 
 export const getAchievements = async () => {
@@ -29,5 +37,5 @@ export const getAchievements = async () => {
     return data
   }
 
-  return achievements
+  return getAchievementsSnapshot()
 }

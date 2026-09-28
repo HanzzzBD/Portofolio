@@ -1,5 +1,15 @@
 export const achievements = [
   {
+    title: "TECHNOVA 2026",
+    date: "30 May 2026",
+    category: "Web Development",
+    level: "West Java",
+    result: "3rd Place",
+    description:
+      "Won 3rd place in the Web Development category at TECHNOVA 2026: Beyond The Frontier of Innovation, organized by HIMA TEKKOM and HIMA RPL Universitas Pendidikan Indonesia. The Final and Pitching Day brought together senior and vocational high school students from across West Java at UPI Cibiru, Bandung.",
+    images: ["/assets/img/technova/technova-2026-web-development-3rd-place.png"],
+  },
+  {
     title: "Dinamik 20",
     date: "14 December 2025",
     category: "Competitive Programming",

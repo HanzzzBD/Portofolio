@@ -4,9 +4,10 @@
 
 :root {
   color-scheme: dark;
-  --page-bg: #07090f;
-  --page-gradient-1: radial-gradient(circle at 18% 12%, rgba(43, 188, 255, 0.18), transparent 42%);
-  --page-gradient-2: radial-gradient(circle at 80% 5%, rgba(99, 245, 214, 0.14), transparent 45%);
+  --page-bg: #080a12;
+  --page-gradient-1: radial-gradient(circle at 15% 8%, rgba(43, 188, 255, 0.16), transparent 40%);
+  --page-gradient-2: radial-gradient(circle at 80% 4%, rgba(162, 114, 255, 0.13), transparent 42%);
+  --page-gradient-3: radial-gradient(circle at 65% 80%, rgba(255, 123, 189, 0.08), transparent 42%);
   --text-strong: #f8fafc;
   --text-muted: #cbd5e1;
   --text-soft: #94a3b8;
@@ -30,7 +31,8 @@
   color-scheme: light;
   --page-bg: #f8fafc;
   --page-gradient-1: radial-gradient(circle at 18% 12%, rgba(59, 130, 246, 0.12), transparent 45%);
-  --page-gradient-2: radial-gradient(circle at 80% 5%, rgba(16, 185, 129, 0.12), transparent 45%);
+  --page-gradient-2: radial-gradient(circle at 80% 5%, rgba(124, 58, 237, 0.1), transparent 45%);
+  --page-gradient-3: radial-gradient(circle at 65% 80%, rgba(236, 72, 153, 0.08), transparent 45%);
   --text-strong: #0f172a;
   --text-muted: #334155;
   --text-soft: #64748b;
@@ -66,7 +68,7 @@
     overflow-x: hidden;
     color: var(--text-strong);
     background-color: var(--page-bg);
-    background-image: var(--page-gradient-1), var(--page-gradient-2);
+    background-image: var(--page-gradient-1), var(--page-gradient-2), var(--page-gradient-3);
     background-size: auto, auto;
     background-attachment: fixed;
   }
@@ -82,7 +84,7 @@
   h2,
   h3,
   h4 {
-    @apply font-semibold tracking-tight;
+    @apply font-semibold tracking-normal;
     color: var(--text-strong);
   }
 
@@ -124,11 +126,11 @@
   }
 
   .section {
-    @apply relative py-20 md:py-28;
+    @apply relative py-24 md:py-36;
   }
 
   .section-title {
-    @apply text-3xl md:text-4xl font-semibold;
+    @apply max-w-3xl text-3xl md:text-5xl font-semibold leading-tight text-balance;
   }
 
   .section-kicker {
@@ -136,7 +138,7 @@
   }
 
   .btn-primary {
-    @apply inline-flex items-center gap-2 rounded-full px-6 py-3 font-medium bg-accent-400 text-base-900 shadow-glow transition-transform duration-300;
+    @apply inline-flex items-center gap-2 rounded-full px-6 py-3 font-semibold bg-accent-400 text-base-900 shadow-glow transition-all duration-300;
   }
 
   .btn-primary:hover {
@@ -144,7 +146,7 @@
   }
 
     .btn-outline {
-    @apply inline-flex items-center gap-2 rounded-full px-6 py-3 font-medium border transition-all duration-300;
+    @apply inline-flex items-center gap-2 rounded-full px-6 py-3 font-semibold border transition-all duration-300;
     border-color: var(--outline-border);
     color: var(--text-strong);
   }
@@ -161,11 +163,28 @@
 
   .card {
     @apply glass rounded-2xl p-6 transition-transform duration-300 will-change-transform;
+    min-height: 100%;
+    position: relative;
+    overflow: hidden;
   }
 
-    .card-title {
+  .card-title {
     @apply text-xl font-semibold;
     color: var(--text-strong);
+  }
+
+  .card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 38%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .card:hover::after {
+    opacity: 1;
   }
 
     .input-field {
@@ -424,7 +443,212 @@
     object-fit: cover;
   }
 
+  .hero-section {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .hero-ambient {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 62% 35%, rgba(43, 188, 255, 0.18), transparent 34%),
+      radial-gradient(circle at 84% 56%, rgba(255, 123, 189, 0.12), transparent 32%);
+    opacity: 0.95;
+  }
+
+  .hero-scene-wrap {
+    position: relative;
+    min-height: 420px;
+    border-radius: 28px;
+    overflow: hidden;
+    pointer-events: none;
+    background:
+      linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
+      radial-gradient(circle at 50% 45%, rgba(99, 245, 214, 0.16), transparent 55%);
+    border: 1px solid rgba(255, 255, 255, 0.11);
+    box-shadow: 0 30px 90px rgba(2, 8, 23, 0.45);
+  }
+
+  .hero-scene-wrap::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 54px 54px;
+    mask-image: radial-gradient(circle, #000 22%, transparent 72%);
+    opacity: 0.45;
+  }
+
+  .hero-scene {
+    position: absolute;
+    inset: 0;
+  }
+
+  .hero-scene canvas {
+    display: block;
+    height: 100%;
+    width: 100%;
+  }
+
+  .hero-panel {
+    position: relative;
+    z-index: 2;
+    margin: -86px 1.4rem 0 auto;
+    max-width: 420px;
+    border-radius: 24px;
+    padding: 1.5rem;
+  }
+
+  .hero-stat {
+    border-left: 1px solid rgba(99, 245, 214, 0.32);
+    padding-left: 1rem;
+  }
+
+  .hero-panel-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.85rem 1rem;
+    color: var(--text-soft);
+  }
+
+  .hero-panel-row strong {
+    color: var(--text-strong);
+    font-weight: 600;
+    text-align: right;
+  }
+
+  .about-bento .card:first-child {
+    background:
+      radial-gradient(circle at 18% 0%, rgba(99, 245, 214, 0.13), transparent 38%),
+      var(--surface);
+  }
+
+  .skills-grid .card,
+  .project-card {
+    border-radius: 24px;
+  }
+
+  .skill-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(120px, 0.8fr);
+    align-items: center;
+    gap: 1rem;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.045);
+    padding: 0.8rem;
+    transition: background 0.25s ease, transform 0.25s ease;
+  }
+
+  .skill-row:hover {
+    background: rgba(99, 245, 214, 0.08);
+    transform: translateY(-2px);
+  }
+
+  .skill-icon {
+    display: inline-flex;
+    height: 2.15rem;
+    width: 2.15rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: rgba(99, 245, 214, 0.1);
+    color: #63f5d6;
+  }
+
+  .project-card {
+    min-height: 360px;
+    isolation: isolate;
+  }
+
+  .project-card:nth-child(3n + 1) {
+    background:
+      radial-gradient(circle at 12% 12%, rgba(43, 188, 255, 0.14), transparent 38%),
+      var(--surface);
+  }
+
+  .project-card:nth-child(3n + 2) {
+    background:
+      radial-gradient(circle at 90% 6%, rgba(162, 114, 255, 0.14), transparent 40%),
+      var(--surface);
+  }
+
+  .project-card:nth-child(3n + 3) {
+    background:
+      radial-gradient(circle at 82% 82%, rgba(255, 123, 189, 0.12), transparent 42%),
+      var(--surface);
+  }
+
+  .project-card-sheen {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+    transform: translateX(-120%);
+    transition: transform 0.7s ease;
+  }
+
+  .project-card:hover .project-card-sheen {
+    transform: translateX(120%);
+  }
+
+  .project-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-strong);
+    transition: color 0.25s ease, transform 0.25s ease;
+  }
+
+  .project-link:hover {
+    color: #63f5d6;
+    transform: translateY(-1px);
+  }
+
+  .contact-panel,
+  .contact-form-shell {
+    background:
+      radial-gradient(circle at 10% 0%, rgba(99, 245, 214, 0.11), transparent 35%),
+      var(--surface);
+  }
+
   @media (max-width: 768px) {
+    .hero-section {
+      min-height: auto;
+    }
+
+    .hero-scene-wrap {
+      min-height: 280px;
+      opacity: 0.82;
+    }
+
+    .hero-panel {
+      margin: -52px 0.75rem 0;
+      max-width: none;
+    }
+
+    .hero-panel-row,
+    .skill-row {
+      grid-template-columns: 1fr;
+      align-items: flex-start;
+    }
+
+    .hero-panel-row {
+      display: grid;
+    }
+
+    .hero-panel-row strong,
+    .skill-row span:last-child {
+      text-align: left;
+    }
+
     .timeline-line {
       left: 16px;
     }
@@ -922,6 +1146,17 @@
   }
   100% {
     transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
   }
 }
 

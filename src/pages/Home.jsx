@@ -1,14 +1,16 @@
-import { useEffect, useRef, useState } from "react"
+import { Suspense, lazy, startTransition, useEffect, useRef, useState } from "react"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { cinematicEase } from "../utils/gsapEase"
+import { getExperienceFlags } from "../utils/experienceMode"
 import Navbar from "../components/Navbar"
 import Hero from "../components/Hero"
 import About from "../components/About"
-import Skills from "../components/Skills"
-import Projects from "../components/Projects"
-import Achievements from "../components/Achievements"
-import Contact from "../components/Contact"
+
+const Skills = lazy(() => import("../components/Skills"))
+const Projects = lazy(() => import("../components/Projects"))
+const Achievements = lazy(() => import("../components/Achievements"))
+const Contact = lazy(() => import("../components/Contact"))
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -19,26 +21,43 @@ const LOCK_LINES = [
 ]
 
 const ACCESS_COMMAND = "unlock"
+const UNLOCK_STORAGE_KEY = "portfolio-unlocked"
+
+const getInitialPhase = () => {
+  if (typeof window === "undefined") return "locked"
+  if (window.sessionStorage.getItem(UNLOCK_STORAGE_KEY) === "true") return "unlocked"
+  return getExperienceFlags().shouldSkipLockscreen ? "unlocked" : "locked"
+}
+
+const DeferredSectionFallback = () => (
+  <div className="section">
+    <div className="mx-auto w-full max-w-[1520px] px-4 sm:px-6 lg:px-8">
+      <div className="glass h-40 rounded-3xl opacity-60" aria-hidden="true" />
+    </div>
+  </div>
+)
 
 const Home = () => {
   const rootRef = useRef(null)
   const inputRef = useRef(null)
-  const [phase, setPhase] = useState("locked")
-  const [typedLines, setTypedLines] = useState(() => LOCK_LINES.map(() => ""))
-  const [typingComplete, setTypingComplete] = useState(false)
+  const [phase, setPhase] = useState(getInitialPhase)
+  const [typedLines, setTypedLines] = useState(() =>
+    getInitialPhase() === "unlocked" ? LOCK_LINES : LOCK_LINES.map(() => ""),
+  )
+  const [typingComplete, setTypingComplete] = useState(() => getInitialPhase() === "unlocked")
   const [command, setCommand] = useState("")
   const [status, setStatus] = useState("idle")
+  const [showDeferredSections, setShowDeferredSections] = useState(false)
 
   const isUnlocked = phase === "unlocked"
   const isUnlocking = phase === "unlocking"
 
   useEffect(() => {
     const root = rootRef.current
-    if (!root || !isUnlocked) return
+    if (!root || !isUnlocked) return undefined
 
     const ctx = gsap.context(() => {
-      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
-      if (reduceMotion) return
+      if (!getExperienceFlags().canUseRichAnimations) return
 
       const sections = gsap.utils.toArray(root.querySelectorAll(".reveal"))
 
@@ -110,11 +129,8 @@ const Home = () => {
       }
     }, root)
 
-    return () => {
-      ctx.revert()
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
-    }
-  }, [isUnlocked])
+    return () => ctx.revert()
+  }, [isUnlocked, showDeferredSections])
 
   useEffect(() => {
     if (isUnlocked) return undefined
@@ -188,6 +204,39 @@ const Home = () => {
     return () => window.clearTimeout(clearTimer)
   }, [status])
 
+  useEffect(() => {
+    if (!isUnlocked || showDeferredSections) return undefined
+
+    let timeoutId
+    let idleId
+
+    const loadDeferredSections = () => {
+      startTransition(() => {
+        setShowDeferredSections(true)
+      })
+    }
+
+    if (typeof window.requestIdleCallback === "function") {
+      idleId = window.requestIdleCallback(loadDeferredSections, { timeout: 700 })
+    } else {
+      timeoutId = window.setTimeout(loadDeferredSections, 180)
+    }
+
+    return () => {
+      if (typeof idleId === "number" && typeof window.cancelIdleCallback === "function") {
+        window.cancelIdleCallback(idleId)
+      }
+      if (typeof timeoutId === "number") {
+        window.clearTimeout(timeoutId)
+      }
+    }
+  }, [isUnlocked, showDeferredSections])
+
+  useEffect(() => {
+    if (!isUnlocked || typeof window === "undefined") return
+    window.sessionStorage.setItem(UNLOCK_STORAGE_KEY, "true")
+  }, [isUnlocked])
+
   const unlock = () => {
     if (isUnlocking || isUnlocked) return
     setStatus("granted")
@@ -229,9 +278,7 @@ const Home = () => {
                 <span className="lockscreen__title-text">Aether Secure Console</span>
                 <span className="lockscreen__title-dot" />
               </div>
-              <span className="lockscreen__badge">
-                {isUnlocking ? "UNLOCKING" : "LOCKED"}
-              </span>
+              <span className="lockscreen__badge">{isUnlocking ? "UNLOCKING" : "LOCKED"}</span>
             </div>
             <div className="lockscreen__lines" aria-live="polite">
               {typedLines.map((line, index) => (
@@ -277,17 +324,23 @@ const Home = () => {
       )}
       <div className="bg-grid" aria-hidden="true" />
       <Navbar />
-      <main className="pt-6">
+      <main className="w-full max-w-full overflow-x-hidden pt-6">
         <Hero />
         <About />
-        <Skills />
-        <Projects />
-        <Achievements />
-        <Contact />
+        {showDeferredSections ? (
+          <Suspense fallback={<DeferredSectionFallback />}>
+            <Skills />
+            <Projects />
+            <Achievements />
+            <Contact />
+          </Suspense>
+        ) : (
+          <DeferredSectionFallback />
+        )}
       </main>
       <footer className="border-t border-white/5 py-8">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 text-sm text-slate-500 md:flex-row">
-          <p>Copyright 2026 Aether Dev. All rights reserved.</p>
+        <div className="mx-auto flex w-full max-w-[1680px] flex-col items-center justify-between gap-4 px-4 text-sm text-slate-500 sm:px-6 md:flex-row lg:px-8">
+          <p>Copyright 2026 Hadrian Rangga Ardiantara. All rights reserved.</p>
           <p className="text-slate-500">Crafted with React, Vite, Tailwind, GSAP.</p>
         </div>
       </footer>
@@ -296,5 +349,3 @@ const Home = () => {
 }
 
 export default Home
-
-

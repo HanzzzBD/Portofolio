@@ -1,71 +1,124 @@
-﻿import { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { FiExternalLink, FiGithub } from "react-icons/fi"
 import HoverCard from "./HoverCard"
-import { getProjects } from "../services/portfolioService"
+import { getProjects, getProjectsSnapshot, hasPortfolioApi } from "../services/portfolioService"
+
+const isRealLink = (url) => {
+  if (!url || typeof url !== "string") return false
+  if (url.includes("yourname") || url.includes("your-username")) return false
+  return /^https?:\/\//i.test(url)
+}
 
 const Projects = () => {
-  const [items, setItems] = useState([])
+  const [items, setItems] = useState(() => getProjectsSnapshot())
 
   useEffect(() => {
-    getProjects().then(setItems)
+    if (!hasPortfolioApi()) return undefined
+
+    let active = true
+    getProjects().then((data) => {
+      if (active) {
+        setItems(data)
+      }
+    })
+
+    return () => {
+      active = false
+    }
   }, [])
+
+  const visibleItems = items.filter((project) => project?.title && project?.description)
 
   return (
     <section id="projects" className="section reveal">
-      <div className="mx-auto max-w-6xl px-6">
-        <div className="mb-10 space-y-3 reveal-item">
-          <p className="section-kicker">Projects</p>
-          <div className="flex flex-wrap items-end justify-between gap-6">
-            <h2 className="section-title">Selected MERN experiences.</h2>
-            <p className="max-w-lg text-sm text-slate-400">
-              A snapshot of production-ready products built with modern architecture and immersive
-              interfaces.
-            </p>
+      <div className="mx-auto w-full max-w-[1680px] px-4 sm:px-6 lg:px-8">
+        <div className="mb-10 grid gap-6 reveal-item lg:grid-cols-[0.8fr_1fr]">
+          <div className="space-y-3">
+            <p className="section-kicker">Works</p>
+            <h2 className="section-title">Selected projects with real code paths.</h2>
           </div>
+          <p className="max-w-2xl text-sm text-slate-400 lg:pt-4">
+            Each project keeps the original portfolio data editable. Cards only show live or GitHub
+            links when a usable URL exists.
+          </p>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-2 reveal-item">
-          {items.map((project) => (
-            <HoverCard key={project.title}>
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="card-title">{project.title}</p>
-                  <p className="mt-3 text-sm text-slate-300">{project.description}</p>
-                </div>
-                <span className="badge">Case Study</span>
-              </div>
+        {visibleItems.length > 0 ? (
+          <div className="project-grid reveal-item grid gap-5 lg:grid-cols-12">
+            {visibleItems.map((project, index) => {
+              const hasGithub = isRealLink(project.github)
+              const hasDemo = isRealLink(project.demo)
+              const role = project.role || "Developer"
+              const isLastSingle =
+                visibleItems.length % 2 === 1 && index === visibleItems.length - 1
+              const isWide = index % 4 === 0 || index % 4 === 3
 
-              <div className="mt-5 flex flex-wrap gap-2">
-                {project.tech.map((tech) => (
-                  <span key={tech} className="badge">
-                    {tech}
-                  </span>
-                ))}
-              </div>
+              return (
+                <HoverCard
+                  key={project.title}
+                  className={`project-card ${
+                    isLastSingle ? "lg:col-span-12" : isWide ? "lg:col-span-7" : "lg:col-span-5"
+                  }`}
+                >
+                  <div className="project-card-sheen" aria-hidden="true" />
+                  <div className="relative z-10 flex h-full flex-col">
+                    <div className="flex flex-wrap items-start justify-between gap-4">
+                      <div>
+                        <p className="card-title text-2xl">{project.title}</p>
+                        <p className="mt-2 text-sm text-slate-400">Role: {role}</p>
+                      </div>
+                      <span className="badge">{project.tech?.[0] || "Project"}</span>
+                    </div>
 
-              <div className="mt-6 flex flex-wrap items-center gap-4 text-sm">
-                <a
-                  href={project.github}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 text-slate-200 hover:text-accent-300"
-                >
-                  <FiGithub />
-                  GitHub
-                </a>
-                <a
-                  href={project.demo}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 text-slate-200 hover:text-accent-300"
-                >
-                  <FiExternalLink />
-                  Live Demo
-                </a>
-              </div>
-            </HoverCard>
-          ))}
-        </div>
+                    <p className="mt-5 text-sm text-slate-300">{project.description}</p>
+
+                    {Array.isArray(project.tech) && project.tech.length > 0 && (
+                      <div className="mt-6 flex flex-wrap gap-2">
+                        {project.tech.map((tech) => (
+                          <span key={tech} className="badge">
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
+                    <div className="mt-auto flex flex-wrap items-center gap-4 pt-8 text-sm">
+                      {hasGithub && (
+                        <a
+                          href={project.github}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="project-link"
+                        >
+                          <FiGithub />
+                          GitHub
+                        </a>
+                      )}
+                      {hasDemo && (
+                        <a
+                          href={project.demo}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="project-link"
+                        >
+                          <FiExternalLink />
+                          Live Demo
+                        </a>
+                      )}
+                      {!hasGithub && !hasDemo && (
+                        <span className="text-sm text-slate-500">No public link added yet</span>
+                      )}
+                    </div>
+                  </div>
+                </HoverCard>
+              )
+            })}
+          </div>
+        ) : (
+          <div className="glass reveal-item rounded-3xl p-8 text-sm text-slate-400">
+            Project data is ready, but no public projects are available yet.
+          </div>
+        )}
       </div>
     </section>
   )

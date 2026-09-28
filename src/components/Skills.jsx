@@ -1,76 +1,129 @@
-﻿import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import HoverCard from "./HoverCard"
-import { getSkills } from "../services/portfolioService"
+import { getSkills, getSkillsSnapshot, hasPortfolioApi } from "../services/portfolioService"
 
-const filters = [
-  { key: "all", label: "All" },
-  { key: "frontend", label: "Frontend" },
-  { key: "backend", label: "Backend" },
-  { key: "game", label: "Game" },
-]
+const categoryMeta = {
+  frontend: {
+    title: "Frontend",
+    description: "Accessible interfaces, interaction polish, animation, and fast Vite workflows.",
+  },
+  backend: {
+    title: "Backend",
+    description: "APIs, authentication flows, database-backed features, and admin panels.",
+  },
+  database: {
+    title: "Database",
+    description: "Relational and document data modeling for application workflows.",
+  },
+  tools: {
+    title: "Tools",
+    description: "Architecture, version control, containers, Android basics, and build tooling.",
+  },
+  aiml: {
+    title: "AI/ML learning",
+    description: "Python foundations, machine learning exploration, and Gemini API integration.",
+  },
+  game: {
+    title: "Interactive systems",
+    description: "Unity scripting and 3D basics used for interactive experiments.",
+  },
+}
+
+const categoryOrder = ["frontend", "backend", "database", "tools", "aiml", "game"]
+
+const normalizeSkillCategory = (skill) => {
+  const name = skill.name.toLowerCase()
+
+  if (["mysql", "mongodb", "postgresql", "redis"].includes(name)) return "database"
+  if (["python"].includes(name)) return "aiml"
+  return skill.category
+}
 
 const Skills = () => {
-  const [items, setItems] = useState([])
-  const [activeFilter, setActiveFilter] = useState("all")
+  const [items, setItems] = useState(() => getSkillsSnapshot())
 
   useEffect(() => {
-    getSkills().then(setItems)
-  }, [])
+    if (!hasPortfolioApi()) return undefined
 
-  const uniqueItems = useMemo(() => {
-    const map = new Map()
-    items.forEach((item) => {
-      const key = item.name.trim().toLowerCase()
-      if (!map.has(key)) {
-        map.set(key, item)
+    let active = true
+    getSkills().then((data) => {
+      if (active) {
+        setItems(data)
       }
     })
-    return Array.from(map.values())
-  }, [items])
 
-  const filteredItems = useMemo(() => {
-    if (activeFilter === "all") return uniqueItems
-    return uniqueItems.filter((item) => item.category === activeFilter)
-  }, [uniqueItems, activeFilter])
+    return () => {
+      active = false
+    }
+  }, [])
+
+  const groups = useMemo(() => {
+    const unique = new Map()
+    items.forEach((item) => {
+      const key = item.name.trim().toLowerCase()
+      if (!unique.has(key)) {
+        unique.set(key, item)
+      }
+    })
+
+    return Array.from(unique.values()).reduce((acc, skill) => {
+      const category = normalizeSkillCategory(skill)
+      if (!acc[category]) acc[category] = []
+      acc[category].push(skill)
+      return acc
+    }, {})
+  }, [items])
 
   return (
     <section id="skills" className="section reveal">
-      <div className="mx-auto max-w-6xl px-6">
-        <div className="mb-8 space-y-3 reveal-item">
-          <p className="section-kicker">Skills</p>
-          <div className="flex flex-wrap items-end justify-between gap-6">
-            <h2 className="section-title">Tech stack that powers the build.</h2>
+      <div className="mx-auto w-full max-w-[1680px] px-4 sm:px-6 lg:px-8">
+        <div className="mb-10 grid gap-6 reveal-item lg:grid-cols-[0.72fr_1fr]">
+          <div className="space-y-3">
+            <p className="section-kicker">Skills</p>
+            <h2 className="section-title">A stack organized around real project work.</h2>
           </div>
+          <p className="max-w-2xl text-sm text-slate-400 lg:pt-4">
+            Tools are grouped by how I use them: building interfaces, shipping backend features,
+            modeling data, and learning AI/ML fundamentals.
+          </p>
         </div>
 
-        <div className="filter-tabs reveal-item mb-8">
-          {filters.map((filter) => (
-            <button
-              key={filter.key}
-              type="button"
-              className={`filter-tab ${activeFilter === filter.key ? "active" : ""}`}
-              onClick={() => setActiveFilter(filter.key)}
-            >
-              {filter.label}
-            </button>
-          ))}
-        </div>
+        <div className="skills-grid reveal-item grid grid-flow-dense gap-4 md:grid-cols-2 xl:grid-cols-6">
+          {categoryOrder.map((category) => {
+            const skills = groups[category] || []
+            if (skills.length === 0) return null
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 reveal-item">
-          {filteredItems.map((skill) => {
-            const Icon = skill.icon
+            const meta = categoryMeta[category] || {
+              title: category,
+              description: "Project skills and tooling.",
+            }
+            const featured = category === "frontend" || category === "backend"
+
             return (
-              <HoverCard key={skill.name}>
-                <div className="flex items-center justify-between">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/5 text-accent-300">
-                    {Icon && <Icon size={22} />}
+              <HoverCard
+                key={category}
+                className={featured ? "xl:col-span-3" : "xl:col-span-2"}
+              >
+                <div className="flex h-full flex-col">
+                  <div>
+                    <p className="text-2xl font-semibold text-slate-50">{meta.title}</p>
+                    <p className="mt-3 text-sm text-slate-400">{meta.description}</p>
                   </div>
-                  <span className="text-xs text-slate-500">{skill.focus}</span>
+                  <div className="mt-6 grid gap-3">
+                    {skills.map((skill) => {
+                      const Icon = skill.icon
+                      return (
+                        <div key={skill.name} className="skill-row">
+                          <div className="flex items-center gap-3">
+                            <span className="skill-icon">{Icon && <Icon size={18} />}</span>
+                            <span className="font-medium text-slate-100">{skill.name}</span>
+                          </div>
+                          <span className="text-right text-xs text-slate-500">{skill.focus}</span>
+                        </div>
+                      )
+                    })}
+                  </div>
                 </div>
-                <p className="mt-4 text-lg font-semibold text-slate-50">{skill.name}</p>
-                <p className="mt-2 text-xs uppercase tracking-[0.25em] text-slate-500">
-                  {skill.category}
-                </p>
               </HoverCard>
             )
           })}

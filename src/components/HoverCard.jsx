@@ -1,17 +1,19 @@
-﻿import { useEffect, useRef } from "react"
+import { useEffect, useRef } from "react"
 import { gsap } from "gsap"
 import { cinematicEase, cinematicEaseSoft } from "../utils/gsapEase"
+import { getExperienceFlags } from "../utils/experienceMode"
 
 const HoverCard = ({ children, className = "" }) => {
   const cardRef = useRef(null)
   const xToRef = useRef(null)
   const yToRef = useRef(null)
-  const reduceMotionRef = useRef(false)
+  const canUseHoverEffectsRef = useRef(false)
 
   useEffect(() => {
-    reduceMotionRef.current = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    canUseHoverEffectsRef.current = getExperienceFlags().canUseHoverEffects
+
     const card = cardRef.current
-    if (!card || reduceMotionRef.current) return
+    if (!card || !canUseHoverEffectsRef.current) return
 
     xToRef.current = gsap.quickTo(card, "x", {
       duration: 0.6,
@@ -24,7 +26,7 @@ const HoverCard = ({ children, className = "" }) => {
   }, [])
 
   const handleEnter = () => {
-    if (!cardRef.current || reduceMotionRef.current) return
+    if (!cardRef.current || !canUseHoverEffectsRef.current) return
 
     gsap.to(cardRef.current, {
       scale: 1.02,
@@ -39,7 +41,7 @@ const HoverCard = ({ children, className = "" }) => {
   }
 
   const handleMove = (event) => {
-    if (!cardRef.current || reduceMotionRef.current) return
+    if (!cardRef.current || !canUseHoverEffectsRef.current) return
     if (!xToRef.current || !yToRef.current) return
 
     const rect = cardRef.current.getBoundingClientRect()
@@ -54,7 +56,7 @@ const HoverCard = ({ children, className = "" }) => {
   }
 
   const handleLeave = () => {
-    if (!cardRef.current || reduceMotionRef.current) return
+    if (!cardRef.current || !canUseHoverEffectsRef.current) return
 
     gsap.to(cardRef.current, {
       scale: 1,

@@ -61,17 +61,17 @@ const Contact = () => {
 
   return (
     <section id="contact" className="section reveal">
-      <div className="mx-auto grid max-w-6xl gap-12 px-6 lg:grid-cols-[1.1fr_0.9fr]">
+      <div className="mx-auto grid w-full max-w-[1680px] gap-12 px-4 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:px-8">
         <div className="space-y-6">
           <div className="space-y-3 reveal-item">
             <p className="section-kicker">Contact</p>
-            <h2 className="section-title">Let's build something ambitious.</h2>
+            <h2 className="section-title">Open to projects, collaboration, and learning teams.</h2>
           </div>
           <p className="reveal-item">
-            Have an idea, a product to launch, or a team that needs extra engineering power? Let's
-            talk about how we can ship it faster and smarter.
+            Reach out for web projects, backend features, school or competition collaboration, or a
+            conversation about practical software engineering work.
           </p>
-          <div className="glass space-y-4 rounded-2xl p-6 reveal-item">
+          <div className="contact-panel glass space-y-4 rounded-2xl p-6 reveal-item">
             <p className="text-sm text-slate-400">Socials</p>
             <div className="flex flex-wrap gap-4 text-sm">
               <a
@@ -103,7 +103,7 @@ const Contact = () => {
           </div>
         </div>
 
-        <div className="glass rounded-3xl p-8 reveal-item">
+        <div className="contact-form-shell glass rounded-3xl p-8 reveal-item">
           <form className="space-y-5" onSubmit={handleSubmit}>
             <div className="hidden" aria-hidden="true">
               <label htmlFor="website">Website</label>
